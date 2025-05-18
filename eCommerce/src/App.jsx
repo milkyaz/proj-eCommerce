@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import ShopList from "./components/ShopList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
