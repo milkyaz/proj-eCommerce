@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import Order from "./Order";
 
-
-
-export default function Header({orders}) {
+export default function Header({ orders }) {
   let [cartOpen, setCartOpen] = useState(false);
-  console.log(orders)
+
   return (
     <header>
       <div>
@@ -22,7 +21,9 @@ export default function Header({orders}) {
 
         {cartOpen && (
           <div className="shop-cart">
-    
+            {orders.map((el) => (
+              <Order key={el.id} item={el} />
+            ))}
           </div>
         )}
       </div>
