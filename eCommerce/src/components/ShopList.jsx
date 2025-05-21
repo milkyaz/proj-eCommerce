@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import Preloader from "./Preloader";
 import ShopCard from "./ShopCard";
 import "../index.css";
-export default function ShopList(props) {
+
+export default function ShopList({ orders, setOrders }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,13 +24,19 @@ export default function ShopList(props) {
       });
   }, []);
 
+  const addToOrder = (item) => {
+    setOrders([...orders, item]);
+  };
+
   return (
     <main>
       <div className="items">
         {loading ? (
           <Preloader />
         ) : items.length ? (
-          items.map((item) => <ShopCard key={item.id} {...item} />)
+          items.map((item) => (
+            <ShopCard key={item.id} {...item} onAdd={addToOrder} />
+          ))
         ) : (
           <p>Не удалось загрузить список</p>
         )}
