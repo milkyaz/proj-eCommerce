@@ -9,6 +9,7 @@ export default function Order({ item }) {
         <div className="card-content">
           <h2>{name}</h2>
           <b>Цена: {price} руб.</b>
+          <span>{item.name}</span> — <b>{item.quantity} шт.</b>
         </div>
       </div>
     </div>

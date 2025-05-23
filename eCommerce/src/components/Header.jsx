@@ -41,6 +41,7 @@ export default function Header({ orders }) {
         {cartOpen && (
           <div className="shop-cart">
             {orders.length > 0 ? showOrders(orders) : showNothing()}
+            
           </div>
         )}
       </div>
