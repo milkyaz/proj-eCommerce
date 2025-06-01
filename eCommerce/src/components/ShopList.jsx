@@ -3,8 +3,14 @@ import Preloader from "./Preloader";
 import ShopCard from "./ShopCard";
 import "../index.css";
 import ShowAlert from "./ShowAlert";
+import { useSelector } from 'react-redux';
 
 export default function ShopList({ orders, setOrders }) {
+  const products = useSelector((state) => state.products.products);
+  const status = useSelector((state) => state.products.status);
+  const error = useSelector((state) => state.products.error);
+  console.log(products)
+  
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   // для показа сообщения после добавления в корзину
