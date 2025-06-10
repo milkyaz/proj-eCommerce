@@ -1,28 +1,30 @@
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import Order from "./Order";
+import { useSelector } from "react-redux";
 
-const showOrders = (orders) => {
-  return (
-    <div>
-      {orders.map((el) => (
-        <Order key={el.id} item={el} />
-      ))}
-    </div>
-  );
-};
-
-const showNothing = () => {
-  return (
-    <div className="empty">
-      <h2>Товаров нет</h2>
-    </div>
-  );
-};
-
-export default function Header({ orders }) {
+export default function Header() {
   let [cartOpen, setCartOpen] = useState(false);
-  console.log(orders.length);
+  const cart = useSelector((state) => state.products.cart);
+
+  const showOrders = (orders) => {
+    return (
+      <div>
+        {orders.map((el) => (
+          <Order key={el.id} item={el} />
+        ))}
+      </div>
+    );
+  };
+  console.log(cart);
+
+  const showNothing = () => {
+    return (
+      <div className="empty">
+        <h2>Товаров нет</h2>
+      </div>
+    );
+  };
 
   return (
     <header>
@@ -40,8 +42,7 @@ export default function Header({ orders }) {
 
         {cartOpen && (
           <div className="shop-cart">
-            {orders.length > 0 ? showOrders(orders) : showNothing()}
-            
+            {cart.length > 0 ? showOrders(cart) : showNothing()}
           </div>
         )}
       </div>

@@ -1,72 +1,58 @@
 import { useState, useEffect } from "react";
 import Preloader from "./Preloader";
 import ShopCard from "./ShopCard";
-import "../index.css";
 import ShowAlert from "./ShowAlert";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts } from "../features/productSlice";
+
 
 export default function ShopList({ orders, setOrders }) {
-  const products = useSelector((state) => state.products.products);
-  const status = useSelector((state) => state.products.status);
-  const error = useSelector((state) => state.products.error);
-  console.log(products)
-  
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // для показа сообщения после добавления в корзину
   const [showAlert, setShowAlert] = useState(null);
 
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+
   useEffect(() => {
-    fetch("https://furniture-api.fly.dev/v1/products")
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data.data)) {
-          setItems(data.data.slice(0, 24));
-        } else {
-          console.error("Unexpected data format:", data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        setLoading(false);
-      });
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const addToOrder = (el, quantity = 1) => {
-    // setOrders([...orders, el]);
-    setShowAlert(el.name + " добавлен в корзину");
+    setShowAlert(`${el.name} добавлен в корзину`);
     const itemIndex = orders.findIndex((value) => value.id === el.id);
+
     if (itemIndex < 0) {
-      const newItem = {
-        ...el,
-        quantity: quantity, // исправлена опечатка ниже
-      };
+      const newItem = { ...el, quantity };
       setOrders([...orders, newItem]);
     } else {
-      const newItem = {
+      const updatedItem = {
         ...orders[itemIndex],
         quantity: orders[itemIndex].quantity + quantity,
       };
-      const newCart = orders.slice();
-      newCart.splice(itemIndex, 1, newItem);
+      const newCart = [...orders];
+      newCart.splice(itemIndex, 1, updatedItem);
       setOrders(newCart);
     }
   };
 
   const hideAlert = () => setShowAlert(null);
+
+  const items = Array.isArray(products.data) ? products.data : [];
+
   return (
     <main>
       <div className="items">
         {showAlert && <ShowAlert text={showAlert} hideAlert={hideAlert} />}
+
         {loading ? (
           <Preloader />
-        ) : items.length ? (
+        ) : error ? (
+          <p style={{ color: "red" }}>Ошибка загрузки: {error}</p>
+        ) : items.length > 0 ? (
           items.map((item) => (
             <ShopCard key={item.id} {...item} onAdd={addToOrder} />
           ))
         ) : (
-          <p>Не удалось загрузить список</p>
+          <p>Нет товаров для отображения.</p>
         )}
       </div>
     </main>
