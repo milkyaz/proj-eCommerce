@@ -10,8 +10,8 @@ export default function Header() {
   const showOrders = (orders) => {
     return (
       <div>
-        {orders.map((el) => (
-          <Order key={el.id} item={el} />
+        {orders.map((el, index) => (
+          <Order key={`${el.id}-${index}`} item={el} />
         ))}
       </div>
     );
